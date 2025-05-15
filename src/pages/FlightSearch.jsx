@@ -45,6 +45,7 @@ const FlightSearch = () => {
 
   // Initialize passenger details based on passenger count
   useEffect(() => {
+    // Initialize passenger details when moving to that step
     if (bookingStep === 1 && selectedFlight) {
       const newPassengerDetails = [];
       for (let i = 0; i < formData.passengers; i++) {
@@ -595,11 +596,11 @@ const FlightSearch = () => {
                 )}
               </button>
             ) : (
-              <div className="bg-white dark:bg-surface-800 rounded-xl shadow-soft dark:shadow-soft-dark p-6 text-center">
-                <p className="text-lg">No flights found for your search criteria. Try different dates or destinations.</p>
-              </div>
-            )}
           </motion.div>
+        )}
+        
+        {/* Booking Confirmation Success */}
+        {bookingStep === 3 && bookingConfirmation && (
         )}
         
         {/* Booking Confirmation Success */}
