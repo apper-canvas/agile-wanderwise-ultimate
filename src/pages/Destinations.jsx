@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import getIcon from '../utils/iconUtils';
 import DestinationCard from '../components/DestinationCard';
-import { destinationsData } from '../data/destinationsData';
+import { fetchDestinations } from '../services/destinationService';
 
 // Icons
 const SearchIcon = getIcon('Search');
@@ -22,14 +22,18 @@ const Destinations = () => {
   useEffect(() => {
     // Simulate loading data from an API
     const fetchDestinations = async () => {
+      setIsLoading(true);
       try {
-        // In a real app, this would be an API call
-        setDestinations(destinationsData);
-        setFilteredDestinations(destinationsData);
-        setIsLoading(false);
+        // Fetch destinations from the backend
+        const data = await fetchDestinations();
+        if (data && Array.isArray(data)) {
+          setDestinations(data);
+          setFilteredDestinations(data);
+        }
       } catch (error) {
         console.error('Error fetching destinations:', error);
         toast.error('Failed to load destinations. Please try again later.');
+      } finally {
         setIsLoading(false);
       }
     };
@@ -52,6 +56,7 @@ const Destinations = () => {
 
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
+    // Filtering is now handled in the useEffect
   };
 
   return (

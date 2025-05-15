@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import getIcon from '../utils/iconUtils';
-import { saveDestination } from '../services/indexedDBService';
+import { createDestination } from '../services/destinationService';
 
 // Icons
 const ArrowLeftIcon = getIcon('ArrowLeft');
@@ -115,7 +115,7 @@ const AddDestination = () => {
       };
       
       // Save to IndexedDB
-      const result = await saveDestination(processedData);
+      const result = await createDestination(processedData);
       
       if (result.success) {
         toast.success('Destination added successfully!');

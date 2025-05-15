@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import getIcon from '../utils/iconUtils';
-import { destinationsData } from '../data/destinationsData';
+import { fetchDestinationById } from '../services/destinationService';
 
 // Icons
 const StarIcon = getIcon('Star');
@@ -28,19 +28,19 @@ const DestinationDetails = () => {
 
   useEffect(() => {
     // In a real app, this would be an API call to fetch details by ID
-    const fetchDestinationDetails = async () => {
+    const getDestinationDetails = async () => {
       try {
         setIsLoading(true);
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        const foundDestination = destinationsData.find(dest => dest.id.toString() === id.toString());
-        
-        if (!foundDestination) {
+        // Fetch destination from the backend
+        const data = await fetchDestinationById(id);
+
+        if (!data) {
           setError('Destination not found');
           toast.error('Destination not found');
         } else {
-          setDestination(foundDestination);
+          // Transform any needed fields
+          const transformedData = { ...data };
+          setDestination(transformedData);
         }
       } catch (error) {
         console.error('Error fetching destination details:', error);
@@ -51,7 +51,7 @@ const DestinationDetails = () => {
       }
     };
 
-    fetchDestinationDetails();
+    getDestinationDetails();
   }, [id]);
 
   const handleSaveToggle = () => {

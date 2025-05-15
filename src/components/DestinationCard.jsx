@@ -49,7 +49,7 @@ const DestinationCard = ({ destination }) => {
       <Link to={`/destinations/${destination.id}`} className="block h-full">
         <div className="relative aspect-[4/3] overflow-hidden">
           {!isImageLoaded && (
-            <div className="absolute inset-0 bg-surface-200 dark:bg-surface-700 animate-pulse"></div>
+            <div className="absolute inset-0 bg-surface-200 dark:bg-surface-700 animate-pulse flex items-center justify-center text-surface-400">Loading...</div>
           )}
           <img
             src={destination.imageUrl}
