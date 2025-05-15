@@ -242,7 +242,8 @@ const Home = () => {
               <a href="#" className="text-surface-400 hover:text-white transition-colors">Terms of Service</a>
             </div>
           </div>
-        </footer>
+        </div>
+      </footer>
     </div>
   );
 };
