@@ -138,8 +138,9 @@ const FlightSearch = () => {
   
   const handleSelectFlight = (flight) => {
     setSelectedFlight(flight);
-    toast.info('Flight selected. View details below.');
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    // Show success toast with more detailed message
+    toast.success(`Flight ${flight.flightNumber} selected successfully. View details below.`);
+    setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 100);
   };
   
   const handlePassengerDetailsChange = (index, field, value) => {
