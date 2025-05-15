@@ -25,7 +25,6 @@ const airlines = [
   "SkyWings Airlines",
   "Horizon Air",
   "Global Express",
-
   "Azure Airways",
   "Celestial Airlines",
   "Velocity Air",
