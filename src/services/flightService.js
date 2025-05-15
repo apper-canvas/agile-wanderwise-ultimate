@@ -17,13 +17,7 @@ const airports = {
   'Beijing': 'PEK',
   'Mumbai': 'BOM',
   'Toronto': 'YYZ',
-  'Berlin': 'BER',
-        duration: `${Math.floor(Math.random() * 5) + 1}h ${Math.floor(Math.random() * 60)}m`,
-        aircraft: `Boeing ${Math.random() > 0.5 ? '737-800' : 'A320'}`,
-        baggage: `${Math.floor(Math.random() * 2) + 1} x 23kg`,
-        amenities: ['Wi-Fi', 'Power outlets', 'In-flight entertainment'].filter(() => Math.random() > 0.3),
-        stops: Math.random() > 0.7 ? 1 : 0,
-        terminal: Math.random() > 0.5 ? 'T1' : 'T2'
+  'Berlin': 'BER'
 };
 
 // Mock airline data
@@ -31,7 +25,6 @@ const airlines = [
   "SkyWings Airlines",
   "Horizon Air",
   "Global Express",
-
 export const bookFlight = async (flightData, passengerDetails) => {
   // Simulate API call with a delay
   return new Promise((resolve) => {
@@ -47,6 +40,7 @@ export const bookFlight = async (flightData, passengerDetails) => {
     }, 1500);
   });
 };
+
   "Azure Airways",
   "Celestial Airlines",
   "Velocity Air",
