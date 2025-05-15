@@ -40,8 +40,8 @@ const airlines = [
  * @param {Object} passengerDetails - Passenger information
  * @returns {Promise<Object>} - Booking confirmation
  */
-const bookFlight = async (flightData, passengerDetails) => {
-  // Simulate API call with a delay
+export function bookFlight(flightData, passengerDetails) {
+  // Simulate API call with a delay  
   return new Promise((resolve) => {
     setTimeout(() => {
       // Generate a booking reference
@@ -54,14 +54,14 @@ const bookFlight = async (flightData, passengerDetails) => {
       });
     }, 1500);
   });
-};
+}
 
 /**
  * Search for flights based on search criteria
  * @param {Object} searchParams - Search parameters (origin, destination, departDate, returnDate, passengers, tripType)
  * @returns {Promise<Object>} - Search results
  */
-const searchFlights = async (searchParams) => {
+export function searchFlights(searchParams) {
   // Simulate API call with a delay
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -81,7 +81,7 @@ const searchFlights = async (searchParams) => {
       }
     }, 1500); // 1.5 second delay to simulate network request
   });
-};
+}
 
 /**
  * Generate mock flight data
@@ -123,6 +123,7 @@ function generateFlights(params) {
   return flights.sort((a, b) => a.price - b.price);
 }
 
+// Also export as default object for backward compatibility
 export default {
   searchFlights,
   bookFlight
