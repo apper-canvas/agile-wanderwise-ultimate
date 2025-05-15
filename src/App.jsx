@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense, createContext } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +40,21 @@ function App() {
   // Get authentication status with proper error handling
   const userState = useSelector((state) => state.user);
   const isAuthenticated = userState?.isAuthenticated || false;
-  
+
+  // Dark mode state
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedMode = localStorage.getItem('darkMode');
+      return savedMode === 'true' || 
+        (!savedMode && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+    return false;
+  });
+
+  // Network status
+  const [isNetworkOnline, setIsNetworkOnline] = useState(isOnline);
+
+
   // Initialize ApperUI once when the app loads
   useEffect(() => {
     const { ApperClient, ApperUI } = window.ApperSDK;
@@ -77,16 +91,7 @@ function App() {
           }
           // Store user information in Redux
           dispatch(setUser(JSON.parse(JSON.stringify(user))));
-        } else {
-  // Dark mode state
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedMode = localStorage.getItem('darkMode');
-      return savedMode === 'true' || 
-        (!savedMode && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    }
-    return false;
-      // User is not authenticated
+        } else {      
       if (!isAuthPage) {
         navigate(
           currentPath.includes('/signup')
@@ -112,13 +117,13 @@ function App() {
         navigate('/login');
       }
       dispatch(clearUser());
-    }
+        }
       },
       onError: function(error) {
         console.error("Authentication failed:", error);
-
-  // Network status
-  const [isNetworkOnline, setIsNetworkOnline] = useState(isOnline);
+      }
+    });
+  }, [dispatch, navigate]);
 
   // Apply dark mode class to document
   useEffect(() => {
@@ -127,12 +132,8 @@ function App() {
     } else {
       document.documentElement.classList.remove('dark');
     }
-      }
-    });
-  }, [dispatch, navigate]);
-
     localStorage.setItem('darkMode', isDarkMode);
-  }, [isDarkMode]);
+  }, [dispatch, navigate]);
 
   // Toggle dark mode
   const toggleDarkMode = () => {
@@ -176,12 +177,9 @@ function App() {
   };
 
   return (
-        <div className="fixed top-0 left-0 right-0 bg-yellow-500 text-yellow-900 py-1 px-4 text-center text-sm z-50">
-          <div className="flex items-center justify-center gap-2">
-            <WifiOffIcon className="w-4 h-4" />
-            <span>You are offline. Using cached content.</span>
-          </div>
-        </div>
+    <AuthContext.Provider value={authMethods}>
+      <div className="min-h-screen">
+        {!isNetworkOnline && (
       )}
     
     <AuthContext.Provider value={authMethods}>
@@ -193,37 +191,38 @@ function App() {
               <span>You are offline. Using cached content.</span>
             </div>
           </div>
-        )}
+          
       
         {/* Only show header when authenticated */}
-        {isAuthenticated && <Header />}
-    
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        onClick={toggleDarkMode}
-        className="fixed bottom-6 right-6 z-50 p-3 rounded-full shadow-soft dark:shadow-neu-dark bg-white dark:bg-surface-800"
-        aria-label="Toggle dark mode"
-        whileTap={{ scale: 0.9 }}
-      >
-        {isDarkMode ? (
-          <SunIcon className="w-6 h-6 text-yellow-400" />
-        ) : (
-          <MoonIcon className="w-6 h-6 text-indigo-600" />
-        )}
-      </motion.button>
+        
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          onClick={toggleDarkMode}
+          className="fixed bottom-6 right-6 z-50 p-3 rounded-full shadow-soft dark:shadow-neu-dark bg-white dark:bg-surface-800"
+          aria-label="Toggle dark mode"
+          whileTap={{ scale: 0.9 }}
+        >
+          {isDarkMode ? (
+            <SunIcon className="w-6 h-6 text-yellow-400" />
+          ) : (
+            <MoonIcon className="w-6 h-6 text-indigo-600" />
+          )}
+        </motion.button>
 
-      <main>
-          <ErrorBoundary>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/callback" element={<Callback />} />
-              <Route path="/error" element={<ErrorPage />} />
-              {isAuthenticated ? (
-                <>
-                  <Route path="/" element={<Home />} />
-                  <Route 
+        <main>
+            <ErrorBoundary>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/callback" element={<Callback />} />
+                <Route path="/error" element={<ErrorPage />} />
+                {isAuthenticated ? (
+                  <>
+                    <Route path="/" element={<Home />} />
+                    <Route 
+                      path="/destinations" 
                     path="/destinations" 
               element={
                 <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading destinations...</div>}>
@@ -268,16 +267,15 @@ function App() {
                   <FlightSearch />
                 </Suspense>
               } 
-                  <Route path="*" element={<NotFound />} />
-                </>
-              ) : (
-                <Route path="*" element={<Navigate to="/login" />} />
-              )}
+                    <Route path="*" element={<NotFound />} />
+                  </>
+                ) : (
+                  <Route path="*" element={<Navigate to="/login" />} />
+                )}
             </Routes>
           </ErrorBoundary>
         </main>
-      </main>
-
+        
       {/* Toast container for notifications */}
       <ToastContainer
         position="top-right"
