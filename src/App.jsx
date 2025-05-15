@@ -8,6 +8,7 @@ import getIcon from './utils/iconUtils';
 
 // Pages
 import Home from './pages/Home';
+const Destinations = lazy(() => import('./pages/Destinations'));
 import NotFound from './pages/NotFound';
 
 // Icon declarations
@@ -100,6 +101,14 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route 
+          path="/destinations" 
+          element={
+            <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading destinations...</div>}>
+              <Destinations />
+            </Suspense>
+          } 
+        />
         <Route 
           path="/destination-guides/*" 
           element={

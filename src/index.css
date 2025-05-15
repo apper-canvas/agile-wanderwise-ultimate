@@ -58,6 +58,10 @@
   .input-field {
     @apply w-full px-4 py-2 bg-surface-100 dark:bg-surface-700 rounded-lg border border-surface-200 dark:border-surface-600 focus:ring-2 focus:ring-primary focus:border-transparent dark:focus:ring-primary-light outline-none transition duration-200;
   }
+  
+  .line-clamp-2 {
+    @apply overflow-hidden text-ellipsis display-webkit-box -webkit-line-clamp-2 -webkit-box-orient-vertical;
+  }
 }
 
 @layer utilities {
