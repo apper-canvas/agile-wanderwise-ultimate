@@ -41,7 +41,7 @@ const airlines = [
  * @param {Object} passengerDetails - Passenger information
  * @returns {Promise<Object>} - Booking confirmation
  */
-export const bookFlight = async (flightData, passengerDetails) => {
+const bookFlight = async (flightData, passengerDetails) => {
   // Simulate API call with a delay
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -62,7 +62,7 @@ export const bookFlight = async (flightData, passengerDetails) => {
  * @param {Object} searchParams - Search parameters (origin, destination, departDate, returnDate, passengers, tripType)
  * @returns {Promise<Object>} - Search results
  */
-export const searchFlights = async (searchParams) => {
+const searchFlights = async (searchParams) => {
   // Simulate API call with a delay
   return new Promise((resolve, reject) => {
     setTimeout(() => {
