@@ -3,14 +3,18 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import getIcon from '../utils/iconUtils';
+import { searchFlights } from '../services/flightService';
 
 // Icon declarations
 const PlaneLandingIcon = getIcon('PlaneLanding');
 const PlaneTakeoffIcon = getIcon('PlaneTakeoff');
 const CalendarIcon = getIcon('Calendar');
 const UserIcon = getIcon('User');
+const UsersIcon = getIcon('Users');
 const SearchIcon = getIcon('Search');
 const ArrowLeftIcon = getIcon('ArrowLeft');
+const PlusIcon = getIcon('Plus');
+const MinusIcon = getIcon('Minus');
 
 const FlightSearch = () => {
   const navigate = useNavigate();
@@ -24,7 +28,8 @@ const FlightSearch = () => {
     tripType: 'roundtrip'
   });
   
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});  
+  const [flightResults, setFlightResults] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -40,6 +45,25 @@ const FlightSearch = () => {
         [name]: null
       });
     }
+  };
+
+  const handlePassengerChange = (increment) => {
+    const newValue = formData.passengers + increment;
+    if (newValue >= 1 && newValue <= 9) {
+      setFormData({
+        ...formData,
+        passengers: newValue
+      });
+    }
+  };
+  
+  const handleTripTypeChange = (type) => {
+    setFormData({
+      ...formData,
+      tripType: type,
+      // Clear return date if switching to one-way
+      returnDate: type === 'oneway' ? '' : formData.returnDate
+    });
   };
 
   const validateForm = () => {
@@ -76,10 +100,12 @@ const FlightSearch = () => {
     setIsSearching(true);
     
     // Simulate an API call
-    setTimeout(() => {
+    searchFlights(formData).then(results => {
       setIsSearching(false);
-      toast.success(`Successfully found flights from ${formData.origin} to ${formData.destination}`);
-    }, 1500);
+      setFlightResults(results);
+      toast.success(`Found ${results.flights.length} flights from ${formData.origin} to ${formData.destination}`);
+    })
+    .catch(err => toast.error('Error searching for flights. Please try again.'));
   };
 
   return (
@@ -116,6 +142,19 @@ const FlightSearch = () => {
         >
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              {/* Trip Type Selection */}
+              <div className="md:col-span-2">
+                <div className="flex border border-surface-200 dark:border-surface-600 rounded-lg overflow-hidden mb-2">
+                  <button 
+                    type="button" 
+                    onClick={() => handleTripTypeChange('roundtrip')}
+                    className={`flex-1 py-2 text-center transition-colors ${formData.tripType === 'roundtrip' ? 'bg-primary text-white' : 'bg-surface-100 dark:bg-surface-700'}`}>Round Trip</button>
+                  <button 
+                    type="button" 
+                    onClick={() => handleTripTypeChange('oneway')}
+                    className={`flex-1 py-2 text-center transition-colors ${formData.tripType === 'oneway' ? 'bg-primary text-white' : 'bg-surface-100 dark:bg-surface-700'}`}>One Way</button>
+                </div>
+              </div>
               <div>
                 <label className="form-label" htmlFor="origin">Origin City</label>
                 <div className="relative">
@@ -126,7 +165,7 @@ const FlightSearch = () => {
                     name="origin"
                     value={formData.origin}
                     onChange={handleInputChange}
-                    className={`form-input pl-10 ${errors.origin ? 'border-red-500' : ''}`}
+                    className={`input-field pl-10 ${errors.origin ? 'border-red-500' : ''}`}
                     placeholder="From where?"
                   />
                 </div>
@@ -143,14 +182,71 @@ const FlightSearch = () => {
                     name="destination"
                     value={formData.destination}
                     onChange={handleInputChange}
-                    className={`form-input pl-10 ${errors.destination ? 'border-red-500' : ''}`}
+                    className={`input-field pl-10 ${errors.destination ? 'border-red-500' : ''}`}
                     placeholder="Where to?"
                   />
                 </div>
                 {errors.destination && <p className="text-red-500 text-sm mt-1">{errors.destination}</p>}
               </div>
+              
+              <div>
+                <label className="form-label" htmlFor="departDate">Departure Date</label>
+                <div className="relative">
+                  <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-500 w-5 h-5" />
+                  <input
+                    type="date"
+                    id="departDate"
+                    name="departDate"
+                    value={formData.departDate}
+                    onChange={handleInputChange}
+                    className={`input-field pl-10 ${errors.departDate ? 'border-red-500' : ''}`}
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+                {errors.departDate && <p className="text-red-500 text-sm mt-1">{errors.departDate}</p>}
+              </div>
+              
+              {formData.tripType === 'roundtrip' && (
+                <div>
+                  <label className="form-label" htmlFor="returnDate">Return Date</label>
+                  <div className="relative">
+                    <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-500 w-5 h-5" />
+                    <input
+                      type="date"
+                      id="returnDate"
+                      name="returnDate"
+                      value={formData.returnDate}
+                      onChange={handleInputChange}
+                      className={`input-field pl-10 ${errors.returnDate ? 'border-red-500' : ''}`}
+                      min={formData.departDate || new Date().toISOString().split('T')[0]}
+                    />
+                  </div>
+                  {errors.returnDate && <p className="text-red-500 text-sm mt-1">{errors.returnDate}</p>}
+                </div>
+              )}
+              
+              {formData.tripType === 'oneway' && (
+                <div>
+                  <label className="form-label" htmlFor="passengers">Passengers</label>
+                  <div className="flex items-center">
+                    <div className="relative flex-1">
+                      <UsersIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-500 w-5 h-5" />
+                      <input
+                        type="text"
+                        id="passengers"
+                        name="passengers"
+                        value={formData.passengers}
+                        readOnly
+                        className="input-field pl-10 text-center"
+                      />
+                    </div>
+                    <button type="button" onClick={() => handlePassengerChange(-1)} className="ml-2 p-2 bg-surface-100 dark:bg-surface-700 rounded-lg hover:bg-surface-200 dark:hover:bg-surface-600 transition-colors" disabled={formData.passengers <= 1}><MinusIcon className="w-5 h-5" /></button>
+                    <button type="button" onClick={() => handlePassengerChange(1)} className="ml-2 p-2 bg-surface-100 dark:bg-surface-700 rounded-lg hover:bg-surface-200 dark:hover:bg-surface-600 transition-colors" disabled={formData.passengers >= 9}><PlusIcon className="w-5 h-5" /></button>
+                  </div>
+                </div>
+              )}
             </div>
-            
+
             <button 
               type="submit" 
               className="btn-primary w-full py-3 flex items-center justify-center"
@@ -161,6 +257,60 @@ const FlightSearch = () => {
             </button>
           </form>
         </motion.div>
+        
+        {/* Flight Results Section */}
+        {isSearching && (
+          <div className="mt-8">
+            <div className="bg-white dark:bg-surface-800 rounded-xl shadow-soft dark:shadow-soft-dark p-6 md:p-8">
+              <div className="flex justify-center items-center py-10">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                <span className="ml-3 text-lg">Searching for the best flights...</span>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {!isSearching && flightResults && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mt-8"
+          >
+            <h2 className="text-2xl font-bold mb-4">Available Flights</h2>
+            {flightResults.flights.length > 0 ? (
+              <div className="space-y-4">
+                {flightResults.flights.map((flight, index) => (
+                  <div key={index} className="bg-white dark:bg-surface-800 rounded-xl shadow-soft dark:shadow-soft-dark p-4 md:p-6">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+                      <div className="flex items-center mb-2 md:mb-0">
+                        <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                          <PlaneTakeoffIcon className="w-6 h-6 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-bold">{flight.airline}</p>
+                          <p className="text-surface-500 dark:text-surface-400 text-sm">Flight {flight.flightNumber}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex-1 flex flex-col md:flex-row justify-between items-start md:items-center px-0 md:px-6 py-2">
+                        <div className="text-center"><p className="font-bold">{flight.departureTime}</p><p className="text-sm text-surface-500 dark:text-surface-400">{formData.origin}</p></div>
+                        <div className="text-center text-surface-500 dark:text-surface-400 text-sm py-1">{flight.duration}</div>
+                        <div className="text-center"><p className="font-bold">{flight.arrivalTime}</p><p className="text-sm text-surface-500 dark:text-surface-400">{formData.destination}</p></div>
+                      </div>
+                      
+                      <button className="btn-primary mt-3 md:mt-0">Select • ${flight.price}</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-white dark:bg-surface-800 rounded-xl shadow-soft dark:shadow-soft-dark p-6 text-center">
+                <p className="text-lg">No flights found for your search criteria. Try different dates or destinations.</p>
+              </div>
+            )}
+          </motion.div>
+        )}
       </div>
     </div>
   );
