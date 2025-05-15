@@ -9,6 +9,7 @@ import getIcon from './utils/iconUtils';
 // Pages
 import Home from './pages/Home';
 const Destinations = lazy(() => import('./pages/Destinations'));
+import Header from './components/Header';
 import NotFound from './pages/NotFound';
 
 const AddDestination = lazy(() => import('./pages/AddDestination'));
@@ -85,6 +86,9 @@ function App() {
         </div>
       )}
     
+      {/* Header with navigation */}
+      <Header />
+    
       {/* Dark mode toggle button */}
       <motion.button
         initial={{ opacity: 0 }}
@@ -102,47 +106,49 @@ function App() {
         )}
       </motion.button>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route 
-          path="/destinations" 
-          element={
-            <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading destinations...</div>}>
-              <Destinations />
-            </Suspense>
-          } 
-        />
-        <Route 
-          path="/destinations/:id" 
-          element={
-            <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
-              <div className="text-center">Loading destination details...</div>
-            </div>}>
-              <DestinationDetails />
-            </Suspense>
-          } 
-        />
-        <Route 
-          path="/destinations/add" 
-          element={
-            <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
-              <div className="text-center">Loading form...</div>
-            </div>}>
-              <AddDestination />
-            </Suspense>
-          } 
-        />
-        <Route 
-          path="/destination-guides/*" 
-          element={
-            <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading guides...</div>}>
-              <DestinationGuides />
-            </Suspense>
-          } 
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route 
+            path="/destinations" 
+            element={
+              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading destinations...</div>}>
+                <Destinations />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/destinations/:id" 
+            element={
+              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
+                <div className="text-center">Loading destination details...</div>
+              </div>}>
+                <DestinationDetails />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/destinations/add" 
+            element={
+              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
+                <div className="text-center">Loading form...</div>
+              </div>}>
+                <AddDestination />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/destination-guides/*" 
+            element={
+              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading guides...</div>}>
+                <DestinationGuides />
+              </Suspense>
+            } 
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      
       {/* Toast container for notifications */}
       <ToastContainer
         position="top-right"

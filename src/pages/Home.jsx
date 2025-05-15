@@ -79,20 +79,7 @@ const Home = () => {
         <div className="absolute opacity-10 -bottom-24 -left-24 w-96 h-96 bg-primary rounded-full blur-3xl"></div>
         
         <div className="container mx-auto px-4 md:px-6">
-          <nav className="flex justify-between items-center mb-12 md:mb-16">
-            <div className="flex items-center gap-2 text-primary">
-              <CompassIcon className="w-8 h-8" />
-              <span className="text-xl font-bold tracking-tight">WanderWise</span>
-            </div>
-            
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-primary"
-            >
-              Get Started
-            </motion.button>
-          </nav>
+          <div className="mb-12 md:mb-16"></div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -244,12 +231,6 @@ const Home = () => {
               <CompassIcon className="w-8 h-8 text-primary-light" />
               <span className="text-xl font-bold tracking-tight">WanderWise</span>
             </div>
-            
-            <div className="flex gap-6">
-              <a href="#" className="text-surface-300 hover:text-white transition-colors">About</a>
-              <a href="#" className="text-surface-300 hover:text-white transition-colors">Features</a>
-              <a href="#" className="text-surface-300 hover:text-white transition-colors">Destinations</a>
-              <a href="#" className="text-surface-300 hover:text-white transition-colors">Support</a>
             </div>
           </div>
           
