@@ -243,8 +243,6 @@ const Home = () => {
             </div>
           </div>
         </footer>
-        </div>
-      </footer>
     </div>
   );
 };
