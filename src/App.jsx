@@ -12,6 +12,7 @@ const Destinations = lazy(() => import('./pages/Destinations'));
 import Header from './components/Header';
 const FlightSearch = lazy(() => import('./pages/FlightSearch'));
 import NotFound from './pages/NotFound';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const AddDestination = lazy(() => import('./pages/AddDestination'));
 // New import - Destination details page
@@ -108,58 +109,60 @@ function App() {
       </motion.button>
 
       <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route 
-            path="/destinations" 
-            element={
-              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading destinations...</div>}>
-                <Destinations />
-              </Suspense>
-            } 
-          />
-          <Route 
-            path="/destinations/:id" 
-            element={
-              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
-                <div className="text-center">Loading destination details...</div>
-              </div>}>
-                <DestinationDetails />
-              </Suspense>
-            } 
-          />
-          <Route 
-            path="/destinations/add" 
-            element={
-              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
-                <div className="text-center">Loading form...</div>
-              </div>}>
-                <AddDestination />
-              </Suspense>
-            } 
-          />
-          <Route 
-            path="/destination-guides/*" 
-            element={
-              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading guides...</div>}>
-                <DestinationGuides />
-              </Suspense>
-            } 
-          />
-          <Route 
-            path="/flight-search" 
-            element={
-              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
-                <div className="text-center">Loading flight search...</div>
-              </div>}>
-                <FlightSearch />
-              </Suspense>
-            } 
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route 
+              path="/destinations" 
+              element={
+                <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading destinations...</div>}>
+                  <Destinations />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/destinations/:id" 
+              element={
+                <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
+                  <div className="text-center">Loading destination details...</div>
+                </div>}>
+                  <DestinationDetails />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/destinations/add" 
+              element={
+                <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
+                  <div className="text-center">Loading form...</div>
+                </div>}>
+                  <AddDestination />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/destination-guides/*" 
+              element={
+                <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading guides...</div>}>
+                  <DestinationGuides />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/flight-search" 
+              element={
+                <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
+                  <div className="text-center">Loading flight search...</div>
+                </div>}>
+                  <FlightSearch />
+                </Suspense>
+              } 
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ErrorBoundary>
       </main>
-      
+
       {/* Toast container for notifications */}
       <ToastContainer
         position="top-right"
