@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AnimatePresence } from 'framer-motion';
 import getIcon from '../utils/iconUtils';
-import { searchFlights, bookFlight } from '../services/flightService';
+import flightService from '../services/flightService';
 
 // Icon declarations
 const PlaneLandingIcon = getIcon('PlaneLanding');
@@ -128,7 +128,7 @@ const FlightSearch = () => {
     setIsSearching(true);
     
     // Simulate an API call
-    searchFlights(formData).then(results => {
+    flightService.searchFlights(formData).then(results => {
       setIsSearching(false);
       setFlightResults(results);
       toast.success(`Found ${results.flights.length} flights from ${formData.origin} to ${formData.destination}`);
@@ -180,7 +180,7 @@ const FlightSearch = () => {
     setIsBooking(true);
     
     try {
-      const result = await bookFlight(selectedFlight, passengerDetails);
+      const result = await flightService.bookFlight(selectedFlight, passengerDetails);
       
       setBookingConfirmation(result);
       setBookingStep(3);
