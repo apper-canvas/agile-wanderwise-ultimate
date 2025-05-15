@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { format, addDays, isAfter, differenceInDays } from 'date-fns';
 import getIcon from '../utils/iconUtils';
+import SaveTripDialog from './SaveTripDialog';
 import { saveTripPlan } from '../services/indexedDBService';
 
 // Icon declarations
@@ -60,6 +61,9 @@ const MainFeature = () => {
   
   // State for errors
   const [errors, setErrors] = useState({});
+
+  // State for save dialog
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   // State for the selected day in the itinerary view
   const [selectedDay, setSelectedDay] = useState(null);
@@ -206,6 +210,9 @@ const MainFeature = () => {
     
     // Clear errors
     setErrors({});
+
+    // Show save dialog
+    setShowSaveDialog(true);
   };
   
   // Delete an activity
@@ -222,6 +229,60 @@ const MainFeature = () => {
   // Calculate total budget spent
   const totalSpent = activities.reduce((sum, activity) => sum + (activity.cost || 0), 0);
   const budgetRemaining = budget ? parseFloat(budget) - totalSpent : null;
+
+  // Function to handle save dialog actions
+  const handleSaveDialogAction = (shouldSave) => {
+    setShowSaveDialog(false);
+    
+    if (shouldSave) {
+      // Validate trip details before saving
+      const formErrors = {};
+      if (!tripName) formErrors.tripName = "Trip name is required";
+      if (!destination) formErrors.destination = "Destination is required";
+      
+      if (Object.keys(formErrors).length > 0) {
+        setErrors(formErrors);
+        toast.error("Please complete required trip details before saving");
+        return;
+      }
+
+      // Prepare trip plan data
+      const tripPlanData = {
+        tripName,
+        destination,
+        startDate,
+        endDate,
+        budget: budget ? parseFloat(budget) : null,
+        activities,
+        notes,
+        totalSpent,
+        daysInTrip
+      };
+
+      // Save to IndexedDB
+      saveTripAndNotify(tripPlanData);
+    }
+  };
+
+  // Function to save trip and show notification
+  const saveTripAndNotify = (tripPlanData) => {
+    // Show loading toast
+    const loadingToast = toast.loading("Saving your trip plan...");
+
+    // Save to IndexedDB
+    saveTripPlan(tripPlanData).then(result => {
+      // Dismiss the loading toast
+      toast.dismiss(loadingToast);
+
+      if (result.success) {
+        // Successfully saved trip
+        toast.success("Your trip plan has been saved successfully!");
+      } else {
+        // Error saving trip
+        toast.error(`Failed to save trip plan: ${result.error}`);
+      }
+    });
+  };
   
   // Generate random destination suggestion
   const suggestDestination = () => {
@@ -748,6 +809,8 @@ const MainFeature = () => {
           )}
         </form>
       </div>
+      {/* Save Trip Dialog */}
+      {showSaveDialog && <SaveTripDialog onAction={handleSaveDialogAction} destination={destination} />}
     </div>
   );
 };
