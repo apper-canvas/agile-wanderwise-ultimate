@@ -11,6 +11,7 @@ import Home from './pages/Home';
 const Destinations = lazy(() => import('./pages/Destinations'));
 import NotFound from './pages/NotFound';
 
+const AddDestination = lazy(() => import('./pages/AddDestination'));
 // New import - Destination details page
 // Icon declarations
 const SunIcon = getIcon('Sun');
@@ -118,6 +119,16 @@ function App() {
               <div className="text-center">Loading destination details...</div>
             </div>}>
               <DestinationDetails />
+            </Suspense>
+          } 
+        />
+        <Route 
+          path="/destinations/add" 
+          element={
+            <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
+              <div className="text-center">Loading form...</div>
+            </div>}>
+              <AddDestination />
             </Suspense>
           } 
         />

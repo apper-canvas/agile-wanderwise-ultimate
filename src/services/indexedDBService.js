@@ -4,6 +4,7 @@ const DB_NAME = 'wanderwiseDB';
 const DB_VERSION = 1;
 const GUIDES_STORE = 'destinationGuides';
 const OFFLINE_GUIDES_STORE = 'offlineGuides';
+const DESTINATIONS_STORE = 'destinations';
 
 /**
  * Initialize the IndexedDB database with object stores for destination guides
@@ -24,6 +25,12 @@ async function initDB() {
           const offlineStore = db.createObjectStore(OFFLINE_GUIDES_STORE, { keyPath: 'id' });
           offlineStore.createIndex('destination', 'destination', { unique: false });
         }
+        
+        // Create a store for destinations
+        if (!db.objectStoreNames.contains(DESTINATIONS_STORE)) {
+          const destinationsStore = db.createObjectStore(DESTINATIONS_STORE, { keyPath: 'id', autoIncrement: true });
+          destinationsStore.createIndex('name', 'name', { unique: true });
+        }
       }
     });
   } catch (error) {
@@ -31,6 +38,23 @@ async function initDB() {
     throw error;
   }
 }
+
+/**
+ * Save a destination to the database
+ * @param {Object} destination - The destination object to save
+ */
+export async function saveDestination(destination) {
+  try {
+    const db = await initDB();
+    // If no ID is provided, one will be auto-generated
+    const id = await db.add(DESTINATIONS_STORE, destination);
+    return { success: true, id };
+  } catch (error) {
+    console.error('Error saving destination:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 
 /**
  * Save a destination guide to the database
@@ -125,4 +149,4 @@ export async function removeGuideFromOffline(id) {
   }
 }
 
-export default { initDB, saveGuide, getAllGuides, getGuideById, saveGuideForOffline, getOfflineGuides, removeGuideFromOffline };
+export default { initDB, saveGuide, getAllGuides, getGuideById, saveGuideForOffline, getOfflineGuides, removeGuideFromOffline, saveDestination };

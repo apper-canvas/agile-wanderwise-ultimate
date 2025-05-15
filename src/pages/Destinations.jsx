@@ -10,6 +10,7 @@ import { destinationsData } from '../data/destinationsData';
 const SearchIcon = getIcon('Search');
 const FilterIcon = getIcon('SlidersHorizontal');
 const GlobeIcon = getIcon('Globe');
+const PlusIcon = getIcon('Plus');
 
 const Destinations = () => {
   const [destinations, setDestinations] = useState([]);
@@ -66,6 +67,16 @@ const Destinations = () => {
         <p className="text-surface-600 dark:text-surface-300 text-center max-w-2xl mx-auto">
           Discover amazing places around the world, from popular cities to hidden gems.
         </p>
+      </div>
+      
+      {/* Add New Destination Button */}
+      <div className="flex justify-end mb-6">
+        <Link
+          to="/destinations/add"
+          className="btn-primary gap-2"
+        >
+          <PlusIcon className="w-5 h-5" /> Add New Destination
+        </Link>
       </div>
 
       {/* Search and filters */}
