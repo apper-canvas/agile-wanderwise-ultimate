@@ -10,6 +10,7 @@ import getIcon from './utils/iconUtils';
 import Home from './pages/Home';
 const Destinations = lazy(() => import('./pages/Destinations'));
 import Header from './components/Header';
+const FlightSearch = lazy(() => import('./pages/FlightSearch'));
 import NotFound from './pages/NotFound';
 
 const AddDestination = lazy(() => import('./pages/AddDestination'));
@@ -142,6 +143,16 @@ function App() {
             element={
               <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading guides...</div>}>
                 <DestinationGuides />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/flight-search" 
+            element={
+              <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
+                <div className="text-center">Loading flight search...</div>
+              </div>}>
+                <FlightSearch />
               </Suspense>
             } 
           />

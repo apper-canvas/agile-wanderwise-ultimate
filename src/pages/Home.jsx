@@ -42,7 +42,8 @@ const Home = () => {
     { 
       icon: <PlaneLandingIcon className="w-6 h-6 text-primary" />, 
       title: "Flight Booking", 
-      description: "Find and book the best flights with price comparison across airlines." 
+      description: "Find and book the best flights with price comparison across airlines.",
+      link: "/flight-search"
     },
     { 
       icon: <HotelIcon className="w-6 h-6 text-secondary" />, 
@@ -210,11 +211,19 @@ const Home = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-50px" }}
-                className="card hover:shadow-lg transition-shadow duration-300"
+                className={`card hover:shadow-lg transition-shadow duration-300 ${feature.link ? 'cursor-pointer' : ''}`}
+                onClick={() => feature.link && navigate(feature.link)}
+                whileHover={feature.link ? { scale: 1.02 } : {}}
+                whileTap={feature.link ? { scale: 0.98 } : {}}
               >
                 <div className="mb-4 p-3 rounded-full w-14 h-14 flex items-center justify-center bg-surface-100 dark:bg-surface-700">
                   {feature.icon}
                 </div>
+                {feature.link && (
+                  <span className="absolute top-4 right-4 text-primary text-xs font-semibold bg-primary/10 px-2 py-1 rounded-full">
+                    Click to explore
+                  </span>
+                )}
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                 <p className="text-surface-600 dark:text-surface-400">{feature.description}</p>
               </motion.div>
