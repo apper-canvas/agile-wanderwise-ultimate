@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { format, addDays, isAfter, differenceInDays } from 'date-fns';
 import getIcon from '../utils/iconUtils';
+import { saveTripPlan } from '../services/indexedDBService';
 
 // Icon declarations
 const PlusIcon = getIcon('Plus');
@@ -129,19 +130,41 @@ const MainFeature = () => {
       setErrors(formErrors);
       return;
     }
-    
-    // Successfully saved trip
-    toast.success("Trip plan saved successfully!");
-    
-    // Clear form (in a real app, we would save to database)
-    console.log({
+
+    // Prepare trip plan data
+    const tripPlanData = {
       tripName,
       destination,
       startDate,
       endDate,
       budget: budget ? parseFloat(budget) : null,
       activities,
-      notes
+      notes,
+      totalSpent,
+      daysInTrip
+    };
+
+    // Show loading toast
+    const loadingToast = toast.loading("Saving your trip plan...");
+
+    // Save to IndexedDB
+    saveTripPlan(tripPlanData).then(result => {
+      // Dismiss the loading toast
+      toast.dismiss(loadingToast);
+
+      if (result.success) {
+        // Successfully saved trip
+        toast.success("Your trip plan has been saved successfully!");
+        
+        // Optionally: Clear form or reset to initial state if needed
+        // setTripName('');
+        // setDestination('');
+        // setActivities([]);
+        // etc.
+      } else {
+        // Error saving trip
+        toast.error(`Failed to save trip plan: ${result.error}`);
+      }
     });
   };
   

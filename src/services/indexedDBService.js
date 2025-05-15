@@ -5,6 +5,7 @@ const DB_VERSION = 1;
 const GUIDES_STORE = 'destinationGuides';
 const OFFLINE_GUIDES_STORE = 'offlineGuides';
 const DESTINATIONS_STORE = 'destinations';
+const TRIP_PLANS_STORE = 'tripPlans';
 
 /**
  * Initialize the IndexedDB database with object stores for destination guides
@@ -30,6 +31,12 @@ async function initDB() {
         if (!db.objectStoreNames.contains(DESTINATIONS_STORE)) {
           const destinationsStore = db.createObjectStore(DESTINATIONS_STORE, { keyPath: 'id', autoIncrement: true });
           destinationsStore.createIndex('name', 'name', { unique: true });
+        }
+        
+        // Create a store for trip plans
+        if (!db.objectStoreNames.contains(TRIP_PLANS_STORE)) {
+          const tripPlansStore = db.createObjectStore(TRIP_PLANS_STORE, { keyPath: 'id', autoIncrement: true });
+          tripPlansStore.createIndex('tripName', 'tripName', { unique: false });
         }
       }
     });
@@ -149,4 +156,65 @@ export async function removeGuideFromOffline(id) {
   }
 }
 
-export default { initDB, saveGuide, getAllGuides, getGuideById, saveGuideForOffline, getOfflineGuides, removeGuideFromOffline, saveDestination };
+/**
+ * Save a trip plan to the database
+ * @param {Object} tripPlan - The trip plan object to save
+ * @returns {Promise<Object>} - Result of the save operation
+ */
+export async function saveTripPlan(tripPlan) {
+  try {
+    const db = await initDB();
+    // If no ID is provided, one will be auto-generated
+    const id = await db.add(TRIP_PLANS_STORE, {
+      ...tripPlan,
+      createdAt: new Date().toISOString()
+    });
+    return { success: true, id };
+  } catch (error) {
+    console.error('Error saving trip plan:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Get all trip plans from the database
+ * @returns {Promise<Array>} - Array of trip plans
+ */
+export async function getAllTripPlans() {
+  try {
+    const db = await initDB();
+    return await db.getAll(TRIP_PLANS_STORE);
+  } catch (error) {
+    console.error('Error fetching trip plans:', error);
+    return [];
+  }
+}
+
+/**
+ * Get a specific trip plan by ID
+ * @param {number|string} id - The trip plan ID
+ * @returns {Promise<Object|null>} - The trip plan or null if not found
+ */
+export async function getTripPlanById(id) {
+  try {
+    const db = await initDB();
+    return await db.get(TRIP_PLANS_STORE, id);
+  } catch (error) {
+    console.error('Error fetching trip plan:', error);
+    return null;
+  }
+}
+
+export default { 
+  initDB, 
+  saveGuide, 
+  getAllGuides, 
+  getGuideById, 
+  saveGuideForOffline, 
+  getOfflineGuides, 
+  removeGuideFromOffline, 
+  saveDestination,
+  saveTripPlan,
+  getAllTripPlans,
+  getTripPlanById
+};
