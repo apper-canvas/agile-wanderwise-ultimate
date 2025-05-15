@@ -25,6 +25,22 @@ const airlines = [
   "SkyWings Airlines",
   "Horizon Air",
   "Global Express",
+
+  "Azure Airways",
+  "Celestial Airlines",
+  "Velocity Air",
+  "Meridian Flights",
+  "Pacific Wings",
+  "Atlantic Airways",
+  "Voyager Airlines"
+];
+
+/**
+ * Book a flight with passenger details
+ * @param {Object} flightData - Flight information
+ * @param {Object} passengerDetails - Passenger information
+ * @returns {Promise<Object>} - Booking confirmation
+ */
 export const bookFlight = async (flightData, passengerDetails) => {
   // Simulate API call with a delay
   return new Promise((resolve) => {
@@ -40,15 +56,6 @@ export const bookFlight = async (flightData, passengerDetails) => {
     }, 1500);
   });
 };
-
-  "Azure Airways",
-  "Celestial Airlines",
-  "Velocity Air",
-  "Meridian Flights",
-  "Pacific Wings",
-  "Atlantic Airways",
-  "Voyager Airlines"
-];
 
 /**
  * Search for flights based on search criteria
@@ -118,5 +125,6 @@ function generateFlights(params) {
 }
 
 export default {
-  searchFlights
+  searchFlights,
+  bookFlight
 };
