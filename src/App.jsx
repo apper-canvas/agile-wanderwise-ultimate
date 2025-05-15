@@ -133,7 +133,7 @@ function App() {
       document.documentElement.classList.remove('dark');
     }
     localStorage.setItem('darkMode', isDarkMode);
-  }, [dispatch, navigate]);
+  }, [isDarkMode]);
 
   // Toggle dark mode
   const toggleDarkMode = () => {
@@ -180,21 +180,17 @@ function App() {
     <AuthContext.Provider value={authMethods}>
       <div className="min-h-screen">
         {!isNetworkOnline && (
-      )}
-    
-    <AuthContext.Provider value={authMethods}>
-      <div className="min-h-screen">
-        {!isNetworkOnline && (
           <div className="fixed top-0 left-0 right-0 bg-yellow-500 text-yellow-900 py-1 px-4 text-center text-sm z-50">
             <div className="flex items-center justify-center gap-2">
               <WifiOffIcon className="w-4 h-4" />
               <span>You are offline. Using cached content.</span>
             </div>
           </div>
-          
-      
+        )}
+
         {/* Only show header when authenticated */}
-        
+        {isAuthenticated && <Header />}
+
         <motion.button
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -222,8 +218,6 @@ function App() {
                   <>
                     <Route path="/" element={<Home />} />
                     <Route 
-                      path="/destinations" 
-                    path="/destinations" 
               element={
                 <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading destinations...</div>}>
                   <Destinations />
@@ -267,8 +261,10 @@ function App() {
                   <FlightSearch />
                 </Suspense>
               } 
-                    <Route path="*" element={<NotFound />} />
-                  </>
+            />
+            
+            <Route path="*" element={<NotFound />} />
+          </>
                 ) : (
                   <Route path="*" element={<Navigate to="/login" />} />
                 )}
@@ -295,7 +291,7 @@ function App() {
       />
       </div>
     </AuthContext.Provider>
-  );
+  )
 }
 
 export default App;
