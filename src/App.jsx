@@ -11,6 +11,7 @@ import Home from './pages/Home';
 const Destinations = lazy(() => import('./pages/Destinations'));
 import NotFound from './pages/NotFound';
 
+// New import - Destination details page
 // Icon declarations
 const SunIcon = getIcon('Sun');
 const MoonIcon = getIcon('Moon');
@@ -19,6 +20,7 @@ const WifiIcon = getIcon('Wifi');
 
 // Lazy-loaded components
 const DestinationGuides = lazy(() => import('./components/DestinationGuides'));
+const DestinationDetails = lazy(() => import('./pages/DestinationDetails'));
 
 function App() {
   // Dark mode state
@@ -106,6 +108,16 @@ function App() {
           element={
             <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">Loading destinations...</div>}>
               <Destinations />
+            </Suspense>
+          } 
+        />
+        <Route 
+          path="/destinations/:id" 
+          element={
+            <Suspense fallback={<div className="flex justify-center items-center min-h-[300px]">
+              <div className="text-center">Loading destination details...</div>
+            </div>}>
+              <DestinationDetails />
             </Suspense>
           } 
         />
