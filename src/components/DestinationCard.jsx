@@ -10,7 +10,8 @@ const BookmarkIcon = getIcon('Bookmark');
 const BookmarkFilledIcon = getIcon('BookmarkCheck');
 const MapPinIcon = getIcon('MapPin');
 
-      className="card overflow-hidden h-full transition-all duration-300 flex flex-col" 
+const DestinationCard = ({ destination }) => {
+
   const [isSaved, setIsSaved] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
@@ -23,7 +24,7 @@ const MapPinIcon = getIcon('MapPin');
     if (!isSaved) {
       toast.success(`${destination.name} added to saved destinations!`);
     } else {
-          <Link to={`/destinations/${destination.id.toString()}`} className="absolute inset-0" aria-label={`View details for ${destination.name}`}></Link>
+      toast.info(`${destination.name} removed from saved destinations`);
     }
   };
 
