@@ -34,7 +34,7 @@ const DestinationDetails = () => {
         // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 800));
         
-        const foundDestination = destinationsData.find(dest => dest.id === id);
+        const foundDestination = destinationsData.find(dest => dest.id.toString() === id.toString());
         
         if (!foundDestination) {
           setError('Destination not found');
