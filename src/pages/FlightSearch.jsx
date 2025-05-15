@@ -591,11 +591,10 @@ const FlightSearch = () => {
                 disabled={isBooking}
                 className="btn-primary w-full py-3 flex items-center justify-center"
               >
-                {isBooking ? 'Processing...' : (
-                  <>Confirm and Pay <CreditCardIcon className="ml-2 w-4 h-4" /></>
-                )}
+                {isBooking ? 'Processing...' : 
+                  <>Confirm and Pay <CreditCardIcon className="ml-2 w-4 h-4" /></>}
               </button>
-            ) : (
+            </div>
           </motion.div>
         )}
         
