@@ -130,7 +130,7 @@ export async function saveGuideForOffline(guide) {
 
 /**
  * Get all guides marked for offline access
-    throw error;
+ */
 export async function getOfflineGuides() {
   try {
     const db = await initDB();
