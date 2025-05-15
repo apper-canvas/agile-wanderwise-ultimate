@@ -232,7 +232,6 @@ const Home = () => {
               <span className="text-xl font-bold tracking-tight">WanderWise</span>
             </div>
             </div>
-          </div>
           
           <div className="border-t border-surface-700 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-surface-400 text-sm mb-4 md:mb-0">
@@ -243,6 +242,7 @@ const Home = () => {
               <a href="#" className="text-surface-400 hover:text-white transition-colors">Terms of Service</a>
             </div>
           </div>
+        </footer>
         </div>
       </footer>
     </div>
