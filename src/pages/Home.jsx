@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import MainFeature from '../components/MainFeature';
 import getIcon from '../utils/iconUtils';
@@ -17,11 +18,13 @@ const CalendarIcon = getIcon('Calendar');
 
 const Home = () => {
   const [showTeaser, setShowTeaser] = useState(true);
+  const navigate = useNavigate();
 
   const dismissTeaser = () => {
     setShowTeaser(false);
     toast.success("Welcome to your travel planning journey!");
   };
+
 
   const fadeInUpVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -115,6 +118,7 @@ const Home = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="btn-outline px-8 py-3 text-lg"
+                  onClick={() => navigate('/destinations')}
                 >
                   Explore Destinations
                 </motion.button>
