@@ -591,9 +591,9 @@ const FlightSearch = () => {
                 className="btn-primary w-full py-3 flex items-center justify-center"
               >
                 {isBooking ? 'Processing...' : (
-                {isBooking ? 'Processing...' : (
                   <>Confirm and Pay <CreditCardIcon className="ml-2 w-4 h-4" /></>
-              </div>
+                )}
+              </button>
             ) : (
               <div className="bg-white dark:bg-surface-800 rounded-xl shadow-soft dark:shadow-soft-dark p-6 text-center">
                 <p className="text-lg">No flights found for your search criteria. Try different dates or destinations.</p>
